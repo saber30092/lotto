@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>聯邦美術比賽</title>
+    <link href="images/favicon.ico" rel="shortcut icon" />
+    <meta name="description" content="聯邦美術比賽..." />
+    <meta name="author" content="聯邦文教基金會">
+
+    <!-- Animate.css -->
+    <link href="~/lib/animate.css/animate.css" rel="stylesheet" />
+    <!-- bootstrap.css -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <!-- layout.css -->
+    <link href="~/css/style_B4.css" rel="stylesheet" />
+    <link href="~/css/style_carousel.css" rel="stylesheet" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="https://card.ubot.com.tw/eCard/"></a>
+        </div>
+    </nav>
+    <!----------nav end------------->
+    <!-- 主視覺 -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="fill topimg1"></div>
+            </div>
+        </div>
+    </div>
+
+    <!----------//主視覺 end------------->
+    <div class="gridContainer clearfix">
+        <!--mainArea-->
+        <div class="mainArea container-fluid">
+            <div class="container" id="app">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!---------------gridContainer clearfix end---------------->
+    <footer>
+        <div id="footer" role="contentinfo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 copyright">
+                        <p>服務專線：<a data-role="none" href="tel:0225369999">(02)2536-9999</a> &nbsp;&nbsp;&nbsp; <a href="https://www.ubot.org.tw/">https://www.ubot.org.tw/</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--Vue-->
+    @if (env.IsDevelopment())
+    {
+        <script src="~/lib/vue/vue.global.js"></script>
+    }
+    else
+    {
+        <script src="~/lib/vue/vue.global.prod.js"></script>
+    }
+    <!--respond.js-->
+    <script src="~/lib/respond.js/respond.min.js"></script>
+    <!--jquery-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!--bootstrap-->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <!--validate-->
+    <script src="~/lib/vee-validate/vee-validate.min.js"></script>
+    <!--axios-->
+    <script src="~/lib/axios/axios.min.js"></script>
+
+    <script type="text/javascript">
+        // 設定 axios 基礎設定
+        let baseURL = '';
+        let layout = 'art-layout';
+        baseURL = '@configuration.GetSection("BaseUrl").Value';
+        window.layout = layout;
+        window.baseURL = baseURL;
+    </script>
+
+    <script type="module">
+        @if (IsSectionDefined("Vue")) {
+            // Vue進入點
+            @RenderSection("Vue", required: false)
+            // Vuer結束點
+        }
+        else {
+            @:const app = Vue.createApp({})
+        }
+        // 全域註冊Component
+        app.component("vForm", VeeValidate.Form);
+        app.component('vField', VeeValidate.Field);
+        app.component('errorMessage', VeeValidate.ErrorMessage);
+
+
+        app.mount('#app');
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+﻿@{
+    string controller = httpContextAccessor.HttpContext.Request.RouteValues["controller"] as string;
+    switch (controller)
+    {
+        case "Home":
+            Layout = "_Layout";
+            break;
+        default:
+            Layout = "_ArtLayout";
+            break;
+    }
+}

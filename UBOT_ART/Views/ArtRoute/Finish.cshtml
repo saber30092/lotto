@@ -1,0 +1,40 @@
+﻿<div class="row">
+    <div class="col-12">
+        <h1>您已完成線上報名！</h1>
+        <h2>
+            感謝您參與本會聯邦美術比賽<br><br>
+            若有相關事宜與建議<br>
+            歡迎您來信<a href="mailto:ubart@ubot.com.tw">ubart@ubot.com.tw</a><br>
+            或來電<a href="tel:0225369999">02-25369999</a>，將竭誠為您服務<br>
+            祝您 順心
+        </h2>
+        <hr>
+
+    </div>
+</div>
+<div class="text-center">
+    <button class="btn btn-primary" onclick="window.open('https://www.ubot.org.tw/index.asp', '_blank')" style="margin-right:10px">聯邦文教基金會</button>
+    <button class="btn btn-primary" style="margin-right:10px" onclick="window.open('https://www.facebook.com/%E8%81%AF%E9%82%A6%E6%96%87%E6%95%99%E5%9F%BA%E9%87%91%E6%9C%83-1433133033444218/', '_blank')">聯邦文教粉絲團</button>
+    <button class="btn btn-primary" v-on:click="GetOtherRoute()">回首頁</button>
+</div>
+
+<script type="text/javascript">
+    @section Vue
+    {
+
+    const app = Vue.createApp({
+        methods: {
+            GetOtherRoute: function (isNext) {
+                try {
+                    window.location.href = '@Url.Action("Index", "ArtRoute")';
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            }
+        }
+    })
+
+
+    }
+</script>

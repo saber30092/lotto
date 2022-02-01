@@ -1,0 +1,78 @@
+﻿<v-form v-on:submit="submitForm">
+    <div class="row">
+        <div class="col-12">
+            <h1>聯邦美術比賽報名</h1>
+            <h2>現職/學歷/參展經驗</h2>
+            <div class="userData">
+                <ul class="formList">
+                    <li class="form-group">
+                        <label class="control-label">學校/機構名稱</label>
+                        <textarea class="form-control" name="comment" cols="50" rows="5" v-model="submitData.Organization"></textarea>
+                        <v-field type="text" name="Organization" v-bind:rules="IsRequired" v-model="submitData.Organization" style="display:none"></v-field>
+                        <small><error-message name="Organization" style="color:red;"></error-message></small>
+                    </li>
+                    <li class="form-group">
+                        <label class="control-label">參展經驗</label>
+                        <textarea class="form-control" name="comment" cols="50" rows="5" v-model="submitData.Detail"></textarea>
+                        <v-field type="text" name="Detail" v-bind:rules="IsRequired" v-model="submitData.Detail" style="display:none"></v-field>
+                        <small><error-message name="Detail" style="color:red;"></error-message></small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="history.go(-1);return true;" style="margin-right:10px">上一頁</button>
+        <button class="btn btn-primary" type="submit">下一頁</button>
+    </div>
+</v-form>
+
+
+<script type="text/javascript">
+    @section Vue
+    {
+    import {
+        AcademicExperience
+    } from '@(configuration.GetSection("BaseUrl").Value)/StaticFiles/Services/ApiServices.js'
+    const app = Vue.createApp({
+        data: function () {
+            return {
+                submitData: {
+                    Uid: "@ViewBag.uid",
+                },
+            }
+        },
+        methods: {
+            submitForm: async function () {
+                try {
+                    const response = await AcademicExperience(this.submitData).then(response => response);
+                    const status = response.status;
+                    if (status === 200) {
+                        const data = response.data;
+                        const code = data.RtnCode;
+                        switch (code) {
+                            case 200:
+                                window.location.href = '@Url.Action("Entries", "ArtRoute")?uid=' + '@ViewBag.uid';
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+                console.log(this.submitData);
+            },
+            IsRequired: function (value) {
+                if (!value) {
+                    return '請務必填寫';
+                }
+                return true;
+            },
+        }
+    })
+
+
+    }
+</script>

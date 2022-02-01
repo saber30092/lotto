@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "animate.css@3.7.2",
+      "destination": "wwwroot/lib/animate.css/"
+    },
+    {
+      "library": "respond.js@1.4.2",
+      "destination": "wwwroot/lib/respond.js/"
+    },
+    {
+      "library": "vue@3.2.29",
+      "destination": "wwwroot/lib/vue/",
+      "files": [
+        "vue.global.prod.js",
+        "vue.global.prod.min.js"
+      ]
+    },
+    {
+      "library": "vee-validate@4.5.8",
+      "destination": "wwwroot/lib/vee-validate/"
+    },
+    {
+      "library": "axios@0.25.0",
+      "destination": "wwwroot/lib/axios/"
+    }
+  ]
+}

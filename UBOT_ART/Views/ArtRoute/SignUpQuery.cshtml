@@ -1,0 +1,52 @@
+﻿<div class="row">
+    <div class="col-12">
+        <h1>查詢報名</h1>
+        <div class="userData">
+            <ul class="formList">
+                <li class="form-group">
+                    <label for="userID" class="control-label">身分證字號</label>
+                    <input type="text" maxlength="10" class="form-control" id="userID" placeholder="英文字母大寫">
+                </li>
+                <li class="form-group">
+                    <label for="userPhone" class="control-label">連絡電話</label>
+                    <input type="text" maxlength="10" class="form-control" id="userPhone" placeholder="請輸入電話號碼包含區碼或0912345678">
+                </li>
+            </ul>
+        </div>
+        <h4>
+            若有相關事宜與建議<br>
+            歡迎您來信<a href="mailto:ubart@ubot.com.tw">ubart@ubot.com.tw</a><br>
+            或來電<a href="tel:0225369999">02-25369999</a>，將竭誠為您服務<br>
+            祝您 順心<br>
+        </h4>
+    </div>
+</div>
+<hr>
+<div class="text-center">
+    <button class="btn btn-primary" v-on:click="GetOtherRoute(false)" style="margin-right:10px">回首頁</button>
+    <button class="btn btn-primary" v-on:click="GetOtherRoute(true)">查詢</button>
+</div>
+
+<script type="text/javascript">
+    @section Vue
+    {
+
+    const app = Vue.createApp({
+        methods: {
+            GetOtherRoute: function (isNext) {
+                try {
+                   if (isNext)
+                        window.location.href = '@Url.Action("DataConfirmation", "ArtRoute")';
+                    else
+                        window.location.href = '@Url.Action("Index", "ArtRoute")';
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            }
+        }
+    })
+
+
+    }
+</script>

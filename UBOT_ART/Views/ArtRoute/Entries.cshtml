@@ -1,0 +1,82 @@
+﻿
+<form asp-action="ImageUpload" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-12">
+            <h1>聯邦美術比賽報名</h1>
+            <h2>參賽作品資料</h2>
+            <div class="userData">
+                @for (int i = 0; i < 5; i++)
+                {
+                    <input type="text" name="[@i].Uid" style="display:none;" value="@ViewBag.uid">
+                    <ul class="formList">
+                        <!-- 作品一 -->
+                        <h4>作品{{ImgData[@i].title}}</h4>
+                        <li class="form-group">
+                            <label for="workNameOne" class="control-label">
+                                畫作名稱
+                            </label>
+                            <input type="text" maxlength="80" class="form-control" name="[@i].PaintingName" placeholder="請輸入作品名稱">
+                        </li>
+                        <li class="form-group">
+                            <label for="workDataOne" class="control-label">
+                                畫作檔案
+                            </label>
+                            <div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="validated-@i"
+                                           accept="image/jpeg" name="[@i].ProfileFile" v-on:change="VerifyImageType($event,@i)">
+                                    <label class="custom-file-label" for="validatedCustomFile" id="imgName-@i">新增檔案</label>
+                                </div>
+                                <div>
+                                    <small>(需自行調整至正確方向，格式為jpg、2MB至5MB)</small>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-group">
+                            <label class="control-label">創作理念<br>100至150字</label>
+                            <textarea class="form-control" name="[@i].concept" cols="50" rows="5"></textarea>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="history.go(-1);return true;" style="margin-right:10px">上一頁</button>
+        <button class="btn btn-primary" type="submit">下一頁</button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    @section Vue
+    {
+    const app = Vue.createApp({
+        data: function () {
+            return {
+                ImgData: [{ title: "一" }, { title: "二" }, { title: "三" }, { title: "四" }, { title: "五" }],
+            }
+        },
+        methods: {
+            VerifyImageType: function (e, index) {
+                let maxsize = 5242880;
+                let minsize = 2097152;
+                if (e.target.files[0].type != "image/jpeg") {
+                    alert('圖片格式不符');
+                    document.getElementById(`${e.target.id}`).value = "";
+                    return false
+                }
+                if (e.target.files[0].size < minsize || e.target.files[0].size > maxsize) {
+                    alert('圖片大小不符');
+                    document.getElementById(`${e.target.id}`).value = "";
+                    return false
+                }
+                document.getElementById(`imgName-${index}`).innerHTML = e.target.files[0].name;
+            },
+        }
+    })
+    }
+
+
+
+</script>
+

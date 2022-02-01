@@ -1,0 +1,602 @@
+﻿
+<div class="row">
+    <div class="col-12">
+        <h1>聯邦美術比賽報名</h1>
+        <h2>個人資料</h2>
+        <v-form v-on:submit="submitForm">
+            <div class="userData">
+                <ul class="formList">
+                    <li class="form-group">
+                        <label class="control-label">比賽項目</label>
+                        <select id="Cid" class="form-control" name="Cid" v-on:change="GetSelectCompetitionItems()">
+                            <option value="0" selected disabled hidden>請選擇</option>
+                            <option v-for="list in competitionList" v-bind:value="list.Cid">{{list.Item}}</option>
+                        </select>
+                        <v-field type="text" name="Cid" v-bind:rules="IsRequired" v-model="submitData.Cid" style="display:none"></v-field>
+                        <small><error-message name="Cid" style="color:red;"></error-message></small>
+                    </li>
+                    <li class="form-group">
+                        <div class="formTwoLine">
+                            <label for="userName" class="control-label">中文姓名</label>
+                            <div>
+                                <v-field type="text" maxlength="50" class="form-control" id="IsChinese" placeholder="請輸入姓名"
+                                         name="UserName" v-bind:rules="IsChinese" v-model="submitData.UserName"></v-field>
+                                <small><error-message name="UserName" style="color:red;"></error-message></small>
+                            </div>
+                        </div>
+                        <div class="formTwoLine">
+                            <label for="userNameEN" class="control-label">護照名字</label>
+                            <div>
+                                <v-field type="text" maxlength="50" class="form-control" id="UserEnName" placeholder="請輸入護照英文名字"
+                                         name="UserEnName" v-bind:rules="IsEnglish" v-model="submitData.UserEnName"></v-field>
+                                <small><error-message name="UserEnName" style="color:red;"></error-message></small>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="form-group">
+                        <div class="formTwoLine">
+                            <label class="control-label">性別</label>
+                            <div class="customWidth">
+                                <div class="custom-control custom-radio">
+                                    <v-field type="radio" class="custom-control-input" id="male" name="radioA" value="true" v-model="submitData.Gender" v-bind:rules="IsRequired"></v-field><label class="custom-control-label" for="male">男</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <v-field type="radio" class="custom-control-input" id="female" name="radioA" value="false" v-model="submitData.Gender" v-bind:rules="IsRequired"></v-field><label class="custom-control-label" for="female">女</label>
+                                </div>
+                                <small><error-message name="radioA" style="color:red;"></error-message></small>
+                            </div>
+                        </div>
+                        <div class="formTwoLine">
+                            <label for="userID" class="control-label">身份證號</label>
+                            <div>
+                                <v-field type="text" maxlength="10" class="form-control" id="userID" placeholder="英文字母大寫"
+                                         name="IDNumber" v-bind:rules="IsID" v-model="submitData.IDNumber"></v-field>
+                                <small><error-message name="IDNumber" style="color:red;"></error-message></small>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="form-group">
+                        <label for="userBirth" class="control-label">出生年月日</label>
+                        <div>
+                            <v-field type="text" maxlength="10" class="form-control" id="userBirth" placeholder="1998-04-17"
+                                     name="Birthday" v-bind:rules="IsBirth" v-model="submitData.Birthday"></v-field>
+                            <small><error-message name="Birthday" style="color:red;"></error-message></small>
+                        </div>
+                    </li>
+                    <li class="form-group">
+                        <label for="userLine" class="control-label">LINE ID(非必填)</label>
+                        <v-field type="text" maxlength="50" class="form-control" id="userLine" placeholder="請輸入LINE ID名稱" name="LineID" v-model="submitData.LineID"></v-field>
+                    </li>
+                    <li class="form-group">
+                        <label for="userPhone" class="control-label">
+                            連絡電話
+                        </label>
+                        <div>
+                            <v-field type="text" maxlength="80" class="form-control" id="userPhone" placeholder="請輸入電話號碼包含區碼0912345678"
+                                     name="Cellphone" v-bind:rules="IsPhone" v-model="submitData.Cellphone"></v-field>
+                            <small><error-message name="Cellphone" style="color:red;"></error-message></small>
+                        </div>
+                    </li>
+                    <li class="form-group">
+                        <label for="userMail" class="control-label">
+                            電子信箱
+                            (非必填)
+                        </label>
+                        <div>
+                            <v-field type="text" name="Email" maxlength="80" class="form-control" id="userMail" placeholder="請輸入E-mail"
+                                     v-bind:rules="IsEmail" v-model="submitData.Email"></v-field>
+                            <small><error-message name="Email" style="color:red;"></error-message></small>
+                        </div>
+                    </li>
+                    <li class="form-group address">
+                        <label class="control-label">通訊地址</label>
+                        <div class="formAddress">
+                            <select class="form-control mr-2" v-on:change="GetDistricts(false)" name="" id="MailingCity">
+                                <option value="0" selected disabled hidden>請選擇</option>
+                                <option v-for="list in cityListInfo" v-bind:value="list.City_ID">{{list.City_Name}}</option>
+                            </select>
+                            <v-field type="text" name="MailingCity" v-bind:rules="IsRequired" v-model="submitData.MailingCity" style="display:none"></v-field>
+                            <small><error-message name="MailingCity" style="color:red;"></error-message></small>
+                            <select class="form-control" name="" v-on:change="GetDistrictsData(false)" id="MailingDistrict">
+                                <option value="0" selected disabled hidden>請選擇</option>
+                                <option v-for="list in districtsListInfo" v-bind:value="list.District_ID">{{list.District_Name}}</option>
+                            </select>
+                            <v-field type="text" name="MailingDistrict" v-bind:rules="IsRequired" v-model="submitData.MailingDistrict" style="display:none"></v-field>
+                            <small><error-message name="MailingDistrict" style="color:red;"></error-message></small>
+                            <v-field type="text" maxlength="80" class="form-control" id="userAddress" placeholder="街路號樓"
+                                     name="MailingAddress" v-bind:rules="IsRequired" v-model="submitData.MailingAddress"></v-field>
+                            <small><error-message name="MailingAddress" style="color:red;"></error-message></small>
+                        </div>
+                    </li>
+                    <li class="form-group address">
+                        <label class="control-label">戶籍地址</label>
+                        <div class="formAddress">
+                            <select class="form-control mr-2" v-on:change="GetDistricts(true)" name="PermanentCity" id="PermanentCity">
+                                <option value="0" selected disabled hidden>請選擇</option>
+                                <option v-for="list in cityList" v-bind:value="list.City_ID">{{list.City_Name}}</option>
+                            </select>
+                            <v-field type="text" name="PermanentCity" v-bind:rules="IsRequired" v-model="submitData.PermanentCity" style="display:none"></v-field>
+                            <small><error-message name="PermanentCity" style="color:red;"></error-message></small>
+                            <select class="form-control" name="PermanentDistrict" v-on:change="GetDistrictsData(true)" id="PermanentDistrict">
+                                <option value="0" selected disabled hidden>請選擇</option>
+                                <option v-for="list in districtsList" v-bind:value="list.District_ID">{{list.District_Name}}</option>
+                            </select>
+                            <v-field type="text" name="PermanentDistrict" v-bind:rules="IsRequired" v-model="submitData.PermanentDistrict" style="display:none"></v-field>
+                            <small><error-message name="PermanentDistrict" style="color:red;"></error-message></small>
+                            <v-field type="text" maxlength="80" class="form-control" id="userAddressHome" placeholder="街路號樓"
+                                     name="PermanentAddress" v-bind:rules="IsRequired" v-model="submitData.PermanentAddress"></v-field>
+                            <small><error-message name="PermanentAddress" style="color:red;"></error-message></small>
+                        </div>
+                    </li>
+                    <li class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeOne" name="agreeOne" v-model="agreeOne" v-on:change="Checked">
+                        <label class="form-check-label" for="agreeOne">
+                            同意 本人參加聯邦文教基金會「聯邦美術獎」甄選，參選資料均屬實，並遵守
+                            簡章之規定，如有違反，主辦單位有取消參賽資格及獎項之權利。
+                        </label>
+                    </li>
+                    <li class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeTwo" name="agreeTwo" v-model="agreeTwo" v-on:change="Checked">
+                        <label class="form-check-label" for="agreeTwo">
+                            本人已充分了解並遵循「聯邦美術獎」簡章之各項規定，並同意 貴會基於執行
+                            與本展印刷、出版、學術研究、教育推廣、文宣及行銷之需要，得對本人之個人資料予以蒐集、處理及利用。
+                        </label>
+                    </li>
+                    <li class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeThree" name="agreeThree" v-model="agreeThree" v-on:change="Checked">
+                        <label class="form-check-label" for="agreeThree">我已詳閱並同意本報名之<a href="#" data-toggle="modal" data-target="#noticeModal">個人資料</a>及<a href="#" data-toggle="modal" data-target="#noticeModal2">隱私權政策聲明</a>用於活動通知及事務聯絡使用。</label>                       
+                    </li>
+                    <li class="form-group form-check">
+                        <v-field type="text" name="check" v-bind:rules="IsChecked" style="display:none" v-model="checked"></v-field>
+                        <small><error-message name="check" style="color:red;"></error-message></small>
+                    </li>
+                </ul>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" v-on:click="GetOtherRoute" style="margin-right:10px">回首頁</button>
+                <button class="btn btn-primary" type="submit">下一頁</button>
+            </div>
+        </v-form>
+    </div>
+</div>
+
+<!---------------gridContainer clearfix end---------------->
+<!-- 個資告知說明 -->
+<div class="modal fade" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="noticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noticeModalLabel">個資告知說明</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="noteTable">
+                    <tbody>
+                        <tr>
+                            <td valign="top" colspan="2">財團法人聯邦文教基金會（以下稱本會）因蒐集、處理、利用台端個人資料依據個人資料保護法第 8 條規定，履行告知義務，應行告知之項目如下：</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="5%">一、</td>
+                            <td>蒐集之目的</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>僅限本會舉辦美術比賽暨相關行政事務使用。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">二、</td>
+                            <td>蒐集個人資料之類別</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>包括姓名、出生年月日、國民身分證統一編號、聯絡方式等及其他得以直接或間接方式識別該個人之資料。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">三、</td>
+                            <td>個人資料利用之期間</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>依個人資料蒐集之特定目的存續期間，或依相關法令所訂保存年限，或本會因執行業務所必須之保存期間。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">四、</td>
+                            <td>個人資料利用之地區、對象及方式</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                對象：為本會，及因本會業務作業委託之機構；地區：為本會及前述機構之所在地。另本會將以自動化機器或其他非自動化之利用方式儲存並合理的使用您所提供之資料。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">五、</td>
+                            <td>得行使之權利及方式</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                依個人資料保護法第3條規定，台端就本會保有台端之個人資料得行使下列權利：
+                                <table>
+                                    <tr>
+                                        <td>(一)</td>
+                                        <td>除有個資法第十條所規定之例外情形外，得向本會查詢、請求閱覽或請求製給複製本，惟本行依個資法第十四條規定得酌收必要成本費用。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(二)</td>
+                                        <td>得向本會請求補充或更正，惟依個資法施行細則第十九條規定，台端應適當釋明其原因及事實。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(三)</td>
+                                        <td>本會如有違反個資法規定蒐集、處理或利用台端之個人資料，依個資法第十一條第四項規定，台端得向本會請求停止蒐集。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(四)</td>
+                                        <td>依個資法第十一條第二項規定，個人資料正確性有爭議者，得向本會請求停止處理或利用台端之個人資料。惟依該項但書規定，本會因執行業務所必須，或經台端書面同意，並註明其爭議者，不在此限。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(五)</td>
+                                        <td>依個資法第十一條第三項規定，個人資料蒐集之特定目的消失或期限屆滿時，得向本會請求刪除、停止處理或利用台端之個人資料。惟依該項但書規定，本會因執行業務所必須或經台端書面同意者，不在此限。</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">六、</td>
+                            <td>台端得自由選擇是否提供相關個人資料，惟台端若不同意本會蒐集、處理或利用台端之個人資料，或提供之個人資料不完全，基於舉辦美術比賽相關行政事務執行之需要，台端將無法參與本會舉辦之美術比賽。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 隱私權政策 -->
+<div class="modal fade" id="noticeModal2" tabindex="-1" role="dialog" aria-labelledby="noticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noticeModalLabel">隱私權政策聲明</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="noteTable">
+                    <tbody>
+                        <tr>
+                            <td valign="top" colspan="2">「聯邦文教基金會」（以下簡稱本會）非常重視客戶的隱私權，並秉持落實個人資料保護及管理措施，制定了「隱私權政策聲明」，對於個人資料的蒐集、處理及利用，均遵守中華民國「個人資料保護法」及相關法令規範。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="5%">一、</td>
+                            <td>隱私權聲明之適用範圍</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>本隱私權聲明，適用於您在使用本會網站服務時，所涉及的個人資料蒐集、處理、利用。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">二、</td>
+                            <td>資料之使用目的</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>本會網站向您取得之報名者資料，僅供本會舉辦美術比賽暨相關行政事務使用，除非事先說明或依照相關法律規定，本會將不會將資料移作其他目的使用，另個人資料並遵守「個人資料保護法」之規定，妥善保護您的個人資訊。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">三、</td>
+                            <td>資料之蒐集方式</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>本會網站基於美術比賽相關行政事務等，會請您填寫所需的相關資料(如:姓名、電話、住址、身分證字號、電子郵件等相關資料)，而取得您的基本資料，並將您的該些資料於上述資料使用目的範圍內利用。您得自由選擇是否提供個人資料予本會，但您若不提供必填欄位資料將無法參與本會舉辦之美術比賽。</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">四、</td>
+                            <td>蒐集之個人資料類別</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                本會網站蒐集的個人資料包括：
+                                <ol>
+                                    <li>C001辨識個人者：如姓名、地址、電話、電子郵件等資訊。</li>
+                                    <li>C003政府資料中之辨識者：如身分證統一編號等資訊。</li>
+                                </ol>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">五、</td>
+                            <td>資料使用期間、地區、對象</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                您的個人資料使用區域僅限於台灣地區內使用，另使用期間依個人資料蒐集之特定目的存續期間，或依相關法令所訂保存年限，或本會因執行業務所必須之保存期間。<br>
+                                本會及本會所委任處理相關事務之第三人(例如：金融機構、合作廠商、物流商等服務提供者)，將於本會資料使用目的範圍內利用個人資料。除非另有法令規範，或另行取得您的同意，否則本會不會向前述以外之第三人揭露您的個人資料。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">六、</td>
+                            <td>資料的處理與使用</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                本會蒐集之報名者資料將存檔於本會之報名系統資料庫內，進行報名者資訊管理，含報名者聯絡通訊資料及報名者資訊建檔、得獎者資訊提交給金融機構以完成金融交易、寄送得獎通知、聯繫得獎者作業事宜、提供國稅局為得獎者年度申報綜合所得稅、將得獎者姓名公告於網站等。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">七、</td>
+                            <td>個人資料儲存及保管方式</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                關您提供的個人資料，本會將就資訊系統及作業規則制定嚴格規範，本會及本會所委任處理相關事務之第三人均須在本會明定的授權規範下才能處理及利用必要之資料。本會針對資料安全設備投注之保護措施如下：<br>
+                                本會採用最佳的科技來保障您的個人資料安全。目前以 Secure Sockets Layer(SSL) 機制(128bit)進行資料傳輸加密，並以加裝防火牆防止不法入侵 ，避免您的個人資料遭到非法存取。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">八、</td>
+                            <td>Cookie及網站數據分析說明</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                <ol>
+                                    <li>為了提供您最佳的服務，本會網站可能會在您的電腦中放置並取用本會的Cookie，若您不願接受Cookie的寫入，您可在您使用的瀏覽器功能項中設定隱私權等級為高，即可拒絕Cookie的寫入，但可能會導致您使用本會網站某些功能時無法正常執行。</li>
+                                    <li>本會使用「Google Analytics」蒐集數據資訊和瀏覽本會網站的流量。「Google Analytics」的隱私權保護政策為「Google」公司所管理，該企業之隱私權保護政策可上其官網查詢。</li>
+                                    <li>透過這些工具蒐集的數據並不包含可用來指認出個人的資料。</li>
+                                    <li>這些數據的用途為加強本會網站的功能性，服務造訪本會網站的訪客。</li>
+                                    <li>本會網站可能含有其他網站的連結，包括部分連結的網路視窗雖然含有本會的機構名稱和logo，但內容卻屬於其他網站。儘管連結到的外部網站可能在視窗上方出現本會的logo，但本會並不為這些外部網站的內容或其隱私權保護政策負責。</li>
+                                </ol>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">九、</td>
+                            <td>個人資料權利行使方式</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                本會所蒐集個人資料之當事人得依法向本會行使以下權利：
+                                <ol>
+                                    <li>查詢或請求閱覽。</li>
+                                    <li>請求製給複製本。</li>
+                                    <li>請求補充或更正。</li>
+                                    <li>請求停止蒐集、處理或利用。</li>
+                                    <li>請求刪除。</li>
+                                </ol>
+                                您如欲行使上述權利，請於上班時間以電話與本會聯繫。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">十、</td>
+                            <td>隱私權聲明之諮詢</td>
+                        </tr>
+                        <tr>
+                            <td valign="top"></td>
+                            <td>
+                                如果您對於本會網站隱私權聲明有任何疑問，請於本會上班時間(週一至週五 09:00~17:00)以電話與本會聯繫，電話02-2536-9999。
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    @section Vue
+    {
+    import {
+        SignUp, GetListOfCity, GetDistrictsByCity,
+        GetListOfCompetitionItems
+    } from '@(configuration.GetSection("BaseUrl").Value)/StaticFiles/Services/ApiServices.js'
+    const app = Vue.createApp({
+        data: function () {
+            return {
+                selectedChecked: null,
+                cityListInfo: null,
+                districtsListInfo: null,
+                cityList: null,
+                districtsList: null,
+                submitData: {},
+                competitionList: null,
+                checkbox: [],
+                agreeOne: false,
+                agreeTwo: false,
+                agreeThree: false,
+                checked: "",
+            }
+        },
+        created: function () {
+            this.GetCity();
+            this.GetCompetitionItems();
+        },
+        methods: {
+            GetOtherRoute: function () {
+                try {
+                    window.location.href = '@Url.Action("Index", "ArtRoute")';
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            },
+            submitForm: async function () {
+                try {
+                    const response = await SignUp(this.submitData).then(response => response);
+                    const status = response.status;
+                    if (status === 200) {
+                        const data = response.data;
+                        const code = data.RtnCode;
+                        switch (code) {
+                            case 200:
+                                window.location.href = '@Url.Action("AcademicExperience", "ArtRoute")?uid=' + data.RtnData;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+                console.log(this.submitData);
+            },
+            GetSelectCompetitionItems: function () {
+                let obj = document.getElementById('Cid');
+                this.submitData.Cid = obj.value;
+            },
+            GetCompetitionItems: async function () {
+                try {
+                    const response = await GetListOfCompetitionItems().then(response => response);
+                    const status = response.status;
+                    if (status === 200) {
+                        this.competitionList = response.data;
+                    }
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            },
+            GetCity: async function (isTF) {
+                try {
+                    const response = await GetListOfCity().then(response => response);
+                    const status = response.status;
+                    if (status === 200) {
+                        const data = response.data;
+                        const code = data.RtnCode;
+                        switch (code) {
+                            case 200:
+                                this.cityList = data.RtnData;
+                                this.cityListInfo = data.RtnData;
+                                break;
+                            default:
+                                console.log(data.RtnData)
+                                break;
+                        }
+                    }
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            },
+            GetDistrictsData: function (isTF) {
+                if (isTF) {
+                    let obj = document.getElementById('PermanentDistrict');
+                    this.submitData.PermanentDistrict = obj.value;
+                }
+                else {
+                    let obj = document.getElementById('MailingDistrict');
+                    this.submitData.MailingDistrict = obj.value;
+                }
+            },
+            GetDistricts: async function (isTF) {
+                try {
+                    let data = 0;
+                    if (isTF) {
+                        let obj = document.getElementById('PermanentCity');
+                        this.submitData.PermanentCity = obj.value;
+                        data = this.submitData.PermanentCity;
+                    }
+                    else {
+                        let obj = document.getElementById('MailingCity');
+                        this.submitData.MailingCity = obj.value;
+                        data = this.submitData.MailingCity
+                    }
+                    const response = await GetDistrictsByCity(data).then(response => response);
+                    const status = response.status;
+                    if (status === 200) {
+                        const data = response.data;
+                        const code = data.RtnCode;
+                        switch (code) {
+                            case 200:
+                                if (isTF)
+                                    this.districtsList = data.RtnData;
+                                else
+                                    this.districtsListInfo = data.RtnData;
+                                break;
+                            default:
+                                console.log(data.RtnData)
+                                break;
+                        }
+                    }
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+            },
+            IsRequired: function (value) {
+                if (!value) {
+                    return '請務必填寫';
+                }
+                return true;
+            },
+            IsChecked: function (value) {
+                if (!value) {
+                    return '請務必仔細詳閱';
+                }
+                return true;
+            },
+            Checked: function () {
+                if (this.agreeOne & this.agreeTwo & this.agreeThree)
+                    this.checked = "閱讀";
+                else
+                    this.checked = "";
+            },
+            IsChinese: function (value) {
+                const regexs = /^[\u4e00-\u9fa5]*$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入中文姓名'
+            },
+            IsEnglish: function (value) {
+                if (value == null) {
+                    return '請輸入英文姓名';
+                }
+                const regexs = /^(?=.*[a-zA-Z]).{1,50}$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入英文姓名'
+            },
+            IsID: function (value) {
+                const regexs = /^[A-Z]{1}[1-2]{1}[0-9]{8}$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入身分證字號'
+            },
+            IsBirth: function (value) {
+                const regexs = /^[1-9]\d{3}-\d{2}-\d{2}$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入正確的生日格式'
+            },
+            IsPhone: function (value) {
+                const regexs = /^09[0-9]{8}$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入正確的電話格式'
+            },
+            IsEmail: function (value) {
+                if (value == undefined || value == "" || value == null) {
+                    return true;
+                }
+                const regexs = /^\w+((-\w+)|(\.\w+))*\@@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+                const result = regexs.test(value);
+                return result ? true : '請輸入正確的Email格式'
+            }
+
+        }
+    })
+
+
+    }
+</script>
